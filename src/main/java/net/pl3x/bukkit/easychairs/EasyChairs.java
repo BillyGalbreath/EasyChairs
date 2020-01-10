@@ -72,6 +72,9 @@ public class EasyChairs extends JavaPlugin implements Listener {
                 // spawn armor stand with fully adjusted location
                 ArmorStand armorStand = (ArmorStand) loc.getWorld().spawnEntity(rotatedLocation, EntityType.ARMOR_STAND);
 
+                // verify armor stand actually spawned
+                if (!armorStand.isValid()) return;
+
                 // finish setting up rest of the armorstand properties
                 armorStand.setGravity(false);
                 armorStand.setCanTick(false);
