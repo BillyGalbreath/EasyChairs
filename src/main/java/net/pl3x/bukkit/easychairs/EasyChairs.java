@@ -1,7 +1,6 @@
 package net.pl3x.bukkit.easychairs;
 
 
-import net.minecraft.server.v1_15_R1.EntityArmorStand;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -11,7 +10,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.Stairs;
-import org.bukkit.craftbukkit.v1_15_R1.CraftWorld;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -67,37 +65,26 @@ public class EasyChairs extends JavaPlugin implements Listener {
                 else if (facing == BlockFace.SOUTH) z -= offset;
                 else if (facing == BlockFace.WEST) x += offset;
 
-                // create nms entity so we can set rotation before adding to world
-                EntityArmorStand nmsStand = new EntityArmorStand(((CraftWorld) loc.getWorld()).getHandle(), x, y, z);
+                // spawn armor stand
+                ArmorStand armorStand = (ArmorStand) loc.getWorld().spawnEntity(new Location(loc.getWorld(), x, y, z), EntityType.ARMOR_STAND);
 
-                // set the rotation
-                nmsStand.lastYaw = nmsStand.yaw = Location.normalizeYaw(facing.ordinal() * 90);
-                nmsStand.lastPitch = nmsStand.pitch = 0;
-                nmsStand.setHeadRotation(nmsStand.yaw);
-
-                // add to world
-                if (!nmsStand.world.addEntity(nmsStand)) {
-                    nmsStand.die(); // was unable to add entity to world
-                    return;
-                }
-
-                // finish setting up rest of the armorstand properties
-                ArmorStand bukkitStand = (ArmorStand) nmsStand.getBukkitLivingEntity();
-                bukkitStand.setGravity(false);
-                bukkitStand.setCanTick(false);
-                bukkitStand.setCanMove(false);
-                bukkitStand.setVisible(false);
-                bukkitStand.setMarker(true);
-                bukkitStand.setSmall(true);
-                bukkitStand.setCustomNameVisible(false);
-                bukkitStand.setCustomName("EasyChairs");
+                // setup the armor stand properties
+                armorStand.setRotation(Location.normalizeYaw(facing.ordinal() * 90), 0);
+                armorStand.setGravity(false);
+                armorStand.setCanTick(false);
+                armorStand.setCanMove(false);
+                armorStand.setVisible(false);
+                armorStand.setMarker(true);
+                armorStand.setSmall(true);
+                armorStand.setCustomNameVisible(false);
+                armorStand.setCustomName("EasyChairs");
 
                 // teleport player closer to chair (with proper rotation)
-                player.teleport(bukkitStand.getLocation());
+                player.teleport(armorStand.getLocation());
 
                 // sit on chair
-                if (!bukkitStand.addPassenger(player)) {
-                    bukkitStand.remove(); // was unable to mount
+                if (!armorStand.addPassenger(player)) {
+                    armorStand.remove(); // was unable to mount
                 }
             }
 
