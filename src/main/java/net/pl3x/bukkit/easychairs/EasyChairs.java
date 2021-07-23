@@ -61,7 +61,7 @@ public class EasyChairs extends JavaPlugin implements Listener {
 
                 // setup location
                 double x = loc.getX() + 0.5D;
-                double y = loc.getY() + 0.3D;
+                double y = loc.getY() + 0.5D;
                 double z = loc.getZ() + 0.5D;
 
                 // fix the seat offset
